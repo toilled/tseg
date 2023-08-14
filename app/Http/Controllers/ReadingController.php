@@ -17,6 +17,11 @@ class ReadingController extends Controller
      */
     function new(string $mpxn, Request $request): Application|Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
+        $request->validate([
+            'value' => 'required|integer',
+            'date' => 'required|date',
+        ]);
+
         $reading = new Reading([
             'meter_mpxn' => $mpxn,
             'value' => $request->input('value'),
