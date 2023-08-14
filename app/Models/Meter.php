@@ -20,11 +20,20 @@ class Meter extends Model
     private string $mpxn;
     private DateTime $installation;
     private Fuel $fuel;
+    private ?int $eac;
 
-    protected $fillable = ['mpxn', 'installation', 'fuel'];
+    protected $fillable = ['mpxn', 'installation', 'fuel', 'eac'];
 
     public function readings(): HasMany
     {
         return $this->hasMany(Reading::class);
+    }
+
+    public function validEAC(): bool
+    {
+        if ($this->getAttribute('eac') > 8000 || $this->getAttribute('eac') < 2000) {
+            return false;
+        }
+        return true;
     }
 }

@@ -17,18 +17,28 @@ class MeterController extends Controller
     /**
      * @throws Exception
      */
-    function new(Request $request): Application|Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
+    public function new(Request $request): Application|Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         $fuelsArray = Fuel::cases();
         $fuels = array_column($fuelsArray, 'name');
 
         $request->validate([
-            'mpxn' => 'required|unique:App\Models\Meter,mpxn',
-            'installation' => 'required|date',
+            'mpxn' => [
+                'required',
+                'unique:App\Models\Meter,mpxn'
+            ],
+            'installation' => [
+                'required',
+                'date'
+            ],
             'fuel' => [
                 'required',
                 Rule::in($fuels)
-            ]
+            ],
+            'eac' => [
+                'gte:2000',
+                'lte:8000',
+            ],
         ]);
 
         $mpxn = $request->input('mpxn');
@@ -37,9 +47,28 @@ class MeterController extends Controller
             'mpxn' => $mpxn,
             'installation' => new DateTime($request->input('installation')),
             'fuel' => $request->input('fuel'),
+            'eac' => $request->input('eac'),
         ]);
         $meter->save();
 
-        return redirect('/meters/' . $mpxn);
+        return redirect('/meters/' . $mpxn . '/view');
+    }
+
+    public function eac(string $mpxn, Request $request)
+    {
+        $request->validate([
+            'value' => [
+                'required',
+                'integer'
+            ],
+        ]);
+
+        /** @var Meter $meter */
+        $meter = Meter::find(['mpxn' => $mpxn])->first();
+
+        $meter->setAttribute('eac', $request->input('value'));
+        $meter->save();
+
+        return redirect('/meters/' . $mpxn . '/view');
     }
 }

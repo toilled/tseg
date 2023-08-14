@@ -15,6 +15,8 @@ class Reading extends Model
     private Meter $meter_mpxn;
     private float $value;
     private DateTime $date;
+    private bool $estimated;
 
-    protected $fillable = ['meter_mpxn', 'value', 'date'];
+    protected $attributes = ['estimated' => false];
+    protected $fillable = ['meter_mpxn', 'value', 'date', 'estimated'];
 }

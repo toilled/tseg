@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<h1><a href="/">Meters</a> > New Meter</h1>
+<h1><a href="/meters">Meters</a> > New Meter</h1>
 @if($errors->any())
     <table>
         {!! implode('', $errors->all('<tr><td>:message</td></tr>')) !!}
@@ -21,6 +21,9 @@
         <option value="Electric" {!! old('fuel') === 'Electric' ? 'selected' : '' !!}>Electric</option>
         <option value="Gas" {!! old('fuel') === 'Gas' ? 'selected' : '' !!}>Gas</option>
     </select>
+
+    <label for="eac">EAC</label>
+    <input type="number" min="2000" max="8000" id="eac" name="eac">
 
     <input type="submit"/>
 </form>

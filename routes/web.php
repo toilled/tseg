@@ -16,6 +16,10 @@ use App\Http\Controllers\MeterController;
 */
 
 Route::get('/', function () {
+    return view('pages.index');
+});
+
+Route::get('/meters', function () {
     return view('pages.meters');
 });
 
@@ -25,12 +29,22 @@ Route::get('/meters/add', function () {
 
 Route::put('/meters/new', [MeterController::class, 'new']);
 
-Route::get('/meters/{mpxn}', function (string $mpxn) {
+Route::get('/meters/{mpxn}/view', function (string $mpxn) {
     return view('pages.meter', ['mpxn' => $mpxn]);
 });
 
-Route::get('/readings/{mpxn}', function (string $mpxn) {
+Route::get('/meters/{mpxn}/eac', function (string $mpxn) {
+    return view('pages.add-eac', ['mpxn' => $mpxn]);
+});
+
+Route::put('/meters/{mpxn}/eac', [MeterController::class, 'eac']);
+
+Route::get('/meters/{mpxn}/readings/add', function (string $mpxn) {
     return view('pages.add-reading', ['mpxn' => $mpxn]);
 });
 
-Route::put('/readings/{mpxn}/new', [ReadingController::class, 'new']);
+Route::get('/meters/{mpxn}/readings/estimate', [ReadingController::class, 'createEstimate']);
+
+Route::put('/meters/{mpxn}/readings/estimate', [ReadingController::class, 'calculateEstimate']);
+
+Route::put('/meters/{mpxn}/readings/new', [ReadingController::class, 'new']);
