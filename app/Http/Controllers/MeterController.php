@@ -36,9 +36,11 @@ class MeterController extends Controller
                 Rule::in($fuels)
             ],
             'eac' => [
+                'nullable',
+                'integer',
                 'gte:2000',
                 'lte:8000',
-            ],
+            ]
         ]);
 
         $mpxn = $request->input('mpxn');
@@ -47,14 +49,14 @@ class MeterController extends Controller
             'mpxn' => $mpxn,
             'installation' => new DateTime($request->input('installation')),
             'fuel' => $request->input('fuel'),
-            'eac' => $request->input('eac'),
+            'eac' => $request->input('eac') ?? 0,
         ]);
         $meter->save();
 
         return redirect('/meters/' . $mpxn . '/view');
     }
 
-    public function eac(string $mpxn, Request $request)
+    public function addEAC(string $mpxn, Request $request): Application|Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         $request->validate([
             'value' => [

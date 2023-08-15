@@ -23,7 +23,7 @@ $meter = Meter::find(['mpxn' => $mpxn])->first();
         @csrf
         @method('PUT')
         <label for="value">Value</label>
-        <input type="number" min="2000" max="8000" id="value" name="value" {!! $errors->has('value') ? 'placeholder="Invalid" aria-invalid="true"' : '' !!} value="{{ old('value') ?? $meter->eac }}"/>
+        <input type="number" min="2000" max="8000" id="value" name="value" {!! $errors->has('value') ? 'placeholder="Invalid" aria-invalid="true"' : '' !!} value="{{ old('value') ?? $meter->getAttribute('eac') }}"/>
 
         <input type="submit"/>
     </form>

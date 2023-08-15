@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @method static find(string[] $array)
+ */
 class Meter extends Model
 {
     use HasFactory;
@@ -24,7 +27,7 @@ class Meter extends Model
 
     protected $fillable = ['mpxn', 'installation', 'fuel', 'eac'];
 
-    public function getLastReading()
+    public function getLastReading(): Model|HasMany|null
     {
         return $this->readings()
             ->where('estimated', '=', 0)

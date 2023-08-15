@@ -13,7 +13,7 @@ $meters = Meter::all();
     <tbody>
     @foreach($meters as $meter)
         <tr>
-            <td><a href="/meters/{{ $meter->mpxn }}/view">{{ $meter->mpxn }}</a></td>
+            <td><a href="/meters/{{ $meter->getAttribute('mpxn') }}/view">{{ $meter->getAttribute('mpxn') }}</a></td>
         </tr>
     @endforeach
     </tbody>

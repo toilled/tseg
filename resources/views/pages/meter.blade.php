@@ -19,7 +19,7 @@ $readings = $meter->readings()->get();
 
 @extends('layouts.default')
 @section('content')
-<h1><a href="/meters">Meters</a> > {{ $meter->mpxn }}</h1>
+<h1><a href="/meters">Meters</a> > {{ $meter->getAttribute('mpxn') }}</h1>
 <table>
     <thead>
     <tr>
@@ -30,13 +30,13 @@ $readings = $meter->readings()->get();
     </thead>
     <tbody>
     <tr>
-        <td>{{ $meter->installation }}</td>
-        <td>{{ $meter->fuel }}</td>
+        <td>{{ $meter->getAttribute('installation') }}</td>
+        <td>{{ $meter->getAttribute('fuel') }}</td>
         <td>
-            @if($meter->eac == 0)
+            @if($meter->getAttribute('eac') == 0)
                 <a href="/meters/{{ $mpxn }}/eac">Set EAC</a>
             @else
-                <a href="/meters/{{ $mpxn }}/eac/edit" data-tooltip="Edit EAC">{{ $meter->eac }}</a>
+                <a href="/meters/{{ $mpxn }}/eac/edit" data-tooltip="Edit EAC">{{ $meter->getAttribute('eac') }}</a>
             @endif
     </tr>
     </tbody>
@@ -63,9 +63,9 @@ $readings = $meter->readings()->get();
             <tbody>
             @foreach($readings as $reading)
                 <tr>
-                    <td>{{ $reading->value }}</td>
-                    <td>{{ $reading->date }}</td>
-                    <td>{{ $reading->estimated ? 'Yes' : 'No' }}</td>
+                    <td>{{ $reading->getAttribute('value') }}</td>
+                    <td>{{ $reading->getAttribute('date') }}</td>
+                    <td>{{ $reading->getAttribute('estimated') ? 'Yes' : 'No' }}</td>
                 </tr>
             @endforeach
             </tbody>

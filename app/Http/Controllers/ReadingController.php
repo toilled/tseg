@@ -25,12 +25,12 @@ class ReadingController extends Controller
             return redirect('/');
         }
 
-        if (count($meter->readings()->get()) === 0) {
-            return Redirect::back()->withErrors(['msg' => 'There must be a previous reading to estimate a new one.']);
-        }
-
         if (!$meter->validEAC()) {
             return Redirect::back()->withErrors(['msg' => 'The estimated usage has not been set on this meter.']);
+        }
+
+        if (count($meter->readings()->get()) === 0) {
+            return Redirect::back()->withErrors(['msg' => 'There must be a previous reading to estimate a new one.']);
         }
 
         return view('pages.estimate-reading', ['meter' => $meter]);
@@ -54,18 +54,18 @@ class ReadingController extends Controller
         $meter = Meter::find(['mpxn' => $mpxn])->first();
         /** @var Reading $lastReading */
         $lastReading = $meter->getLastReading();
-        $lastReadingDate = new DateTime($lastReading->date);
+        $lastReadingDate = new DateTime($lastReading->getAttribute('date'));
 
         if ($lastReadingDate > $estimationDate) {
             return Redirect::back()->withErrors(['date' => 'Estimation date must be after last real reading.']);
         }
 
         $daysBetweenReadings = $estimationDate->diff($lastReadingDate)->days;
-        $estimatedUsage = ($meter->eac / 365) * $daysBetweenReadings;
+        $estimatedUsage = ($meter->getAttribute('eac') / 365) * $daysBetweenReadings;
 
         $reading = new Reading([
             'meter_mpxn' => $mpxn,
-            'value' => (int)($lastReading->value + $estimatedUsage),
+            'value' => (int)($lastReading->getAttribute('value') + $estimatedUsage),
             'date' => $estimationDate,
             'estimated' => true,
         ]);
@@ -97,15 +97,17 @@ class ReadingController extends Controller
         $meter = Meter::find(['mpxn' => $mpxn])->first();
         /** @var Reading $lastReading */
         $lastReading = $meter->getLastReading();
-        $lastReadingDate = new DateTime($lastReading->date);
+        if ($lastReading !== null) {
+            $lastReadingDate = new DateTime($lastReading->getAttribute('date'));
 
-        $daysBetweenReadings = $readingDate->diff($lastReadingDate)->days;
-        $estimatedUsage = ($meter->eac / 365) * $daysBetweenReadings;
+            $daysBetweenReadings = $readingDate->diff($lastReadingDate)->days;
+            $estimatedUsage = ($meter->getAttribute('eac') / 365) * $daysBetweenReadings;
 
-        $realDifference = $readingValue - $lastReading->value;
-        $percentageBetweenEstimatedAndReal = (1 - $estimatedUsage / $realDifference) * 100;
-        if (abs($percentageBetweenEstimatedAndReal) > 25) {
-            return Redirect::back()->withErrors(['value' => 'Provided meter value differs more than 25% from estimation.']);
+            $realDifference = $readingValue - $lastReading->getAttribute('value');
+            $percentageBetweenEstimatedAndReal = (1 - $estimatedUsage / $realDifference) * 100;
+            if (abs($percentageBetweenEstimatedAndReal) > 25) {
+                return Redirect::back()->withErrors(['value' => 'Provided meter value differs more than 25% from estimation.']);
+            }
         }
 
         $reading = new Reading([

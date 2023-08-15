@@ -41,7 +41,7 @@ Route::get('/meters/{mpxn}/eac/edit', function (string $mpxn) {
     return view('pages.edit-eac', ['mpxn' => $mpxn]);
 });
 
-Route::put('/meters/{mpxn}/eac', [MeterController::class, 'eac']);
+Route::put('/meters/{mpxn}/eac', [MeterController::class, 'addEAC']);
 
 Route::get('/meters/{mpxn}/readings/add', function (string $mpxn) {
     return view('pages.add-reading', ['mpxn' => $mpxn]);

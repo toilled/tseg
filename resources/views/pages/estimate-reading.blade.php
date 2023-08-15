@@ -4,7 +4,7 @@ use App\Models\Meter;
 
 /** @var Meter $meter */
 
-$mpxn = $meter->mpxn;
+$mpxn = $meter->getAttribute('mpxn');
 ?>
 @extends('layouts.default')
 @section('content')
