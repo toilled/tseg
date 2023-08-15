@@ -8,7 +8,7 @@ $meters = Meter::all();
 
 @extends('layouts.default')
 @section('content')
-<h1>Meters <a href="/meters/add">+</a></h1>
+<h1>Meters <a href="/meters/add" data-tooltip="Add Meter">+</a></h1>
 <table>
     <tbody>
     @foreach($meters as $meter)

@@ -24,6 +24,14 @@ class Meter extends Model
 
     protected $fillable = ['mpxn', 'installation', 'fuel', 'eac'];
 
+    public function getLastReading()
+    {
+        return $this->readings()
+            ->where('estimated', '=', 0)
+            ->orderBy('date', 'desc')
+            ->first();
+    }
+
     public function readings(): HasMany
     {
         return $this->hasMany(Reading::class);

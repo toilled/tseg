@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class ReadingController extends Controller
 {
-    public function createEstimate(string $mpxn): Application|View|Factory|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse|null
+    public function createEstimate(string $mpxn): Application|View|Factory|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
     {
         /** @var Meter $meter */
         $meter = Meter::find(['mpxn' => $mpxn])->first();
@@ -53,10 +53,7 @@ class ReadingController extends Controller
         /** @var Meter $meter */
         $meter = Meter::find(['mpxn' => $mpxn])->first();
         /** @var Reading $lastReading */
-        $lastReading = $meter
-            ->readings()
-            ->where('estimated', '=', 0)
-            ->orderBy('date', 'desc')->first();
+        $lastReading = $meter->getLastReading();
         $lastReadingDate = new DateTime($lastReading->date);
 
         if ($lastReadingDate > $estimationDate) {
@@ -99,10 +96,7 @@ class ReadingController extends Controller
         /** @var Meter $meter */
         $meter = Meter::find(['mpxn' => $mpxn])->first();
         /** @var Reading $lastReading */
-        $lastReading = $meter
-            ->readings()
-            ->where('estimated', '=', 0)
-            ->orderBy('date', 'desc')->first();
+        $lastReading = $meter->getLastReading();
         $lastReadingDate = new DateTime($lastReading->date);
 
         $daysBetweenReadings = $readingDate->diff($lastReadingDate)->days;

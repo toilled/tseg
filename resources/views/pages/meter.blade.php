@@ -36,7 +36,7 @@ $readings = $meter->readings()->get();
             @if($meter->eac == 0)
                 <a href="/meters/{{ $mpxn }}/eac">Set EAC</a>
             @else
-                {{ $meter->eac }}
+                <a href="/meters/{{ $mpxn }}/eac/edit" data-tooltip="Edit EAC">{{ $meter->eac }}</a>
             @endif
     </tr>
     </tbody>
