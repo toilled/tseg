@@ -59,7 +59,9 @@ class MeterController extends Controller
         $request->validate([
             'value' => [
                 'required',
-                'integer'
+                'integer',
+                'gte:2000',
+                'lte:8000',
             ],
         ]);
 
